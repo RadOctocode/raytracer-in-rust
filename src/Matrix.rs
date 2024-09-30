@@ -1,5 +1,6 @@
-use float_cmp::approx_eq;
+pub mod Tuple;
 
+#[derive(Debug)]
 struct Matrix {
     width: usize,
     height: usize,
@@ -7,7 +8,7 @@ struct Matrix {
 }
 
 impl Matrix {
-    fn new(_width: usize, _height: usize) -> Self {
+    fn zero(_width: usize, _height: usize) -> Self {
         let mut _vector = vec![vec![0.0; _width]; _height];
         Matrix {
             width: _width,
@@ -25,6 +26,21 @@ impl Matrix {
     fn get(&self, y: usize, x: usize) -> f64 {
         self.vector[y][x]
     }
+    fn set_element(&mut self, y: usize, x: usize, value: f64) {
+        self.vector[y][x] = value;
+    }
+
+    fn get_row(&self, index: usize) -> Vec<f64> {
+        self.vector[index].clone()
+    }
+
+    fn get_col(&self, index: usize) -> Vec<f64> {
+        let mut return_value = Vec::new();
+        for list in &self.vector {
+            return_value.push(list[index]);
+        }
+        return return_value;
+    }
 }
 
 impl PartialEq for Matrix {
@@ -41,6 +57,45 @@ impl PartialEq for Matrix {
             }
         }
         return true;
+    }
+}
+
+fn calculate_element_sum(a: &Vec<f64>, b: &Vec<f64>) -> f64 {
+    let mut sum = 0.0;
+
+    for (index, element) in a.iter().enumerate() {
+        sum += element * b[index];
+    }
+
+    return sum;
+}
+
+impl std::ops::Mul<Matrix> for Matrix {
+    type Output = Matrix;
+    fn mul(self, _rhs: Matrix) -> Matrix {
+        let mut output_matrix = Matrix::zero(self.height, _rhs.width);
+        for y_index in 0..self.height {
+            for x_index in 0.._rhs.width {
+                let a_row = self.get_row(y_index);
+                let b_col = self.get_col(x_index);
+                let total_element = calculate_element_sum(&a_row, &b_col);
+                output_matrix.set_element(y_index, x_index, total_element);
+            }
+        }
+        return output_matrix;
+    }
+}
+
+impl std::ops::Mul<Tuple> for Matrix {
+    type Output = Tuple::Tuple;
+    fn mul(self, rhs: Tuple::Tuple) -> Tuple::Tuple {
+        let mut output_tuple_vector = vec![0.0, 0.0, 0.0, 0.0];
+        for y_index in 0..self.height {
+            let matrix_row = self.get_row(y_index);
+            let total_element = calculate_element_sum(&matrix_row, &rhs.vector);
+            output_tuple_vector[y_index] = total_element;
+        }
+        return Tuple::set_tuple(output_tuple_vector);
     }
 }
 
@@ -117,4 +172,25 @@ mod tests {
         let b = Matrix::set(&matrix_b_vec);
         assert_eq!(a == b, false);
     }
+
+    #[test]
+    fn test_calculate_element_sum() {
+        let a = vec![-3.0, 5.0, 1.0];
+        let b = vec![3.0, 2.0, 1.0];
+        let expected_sum = 2.0;
+        let actual_sum = calculate_element_sum(&a, &b);
+        assert_eq!(actual_sum, expected_sum);
+    }
+
+    // #[test]
+    // fn test_matrix_multiplication() {
+    //     let a_vec = vec![vec![-3.0, 5.0, 1.0], vec![1.0, 2.0, 1.0]];
+    //     let b_vec = vec![vec![3.0, 5.0], vec![2.0, 1.0], vec![1.0, -2.0]];
+    //     let c_vec = vec![vec![2.0, -12.0], vec![8.0, 5.0]];
+    //     let a = Matrix::set(&a_vec);
+    //     let b = Matrix::set(&b_vec);
+    //     let c = Matrix::set(&c_vec);
+    //     let actual_sum = a * b;
+    //     assert_eq!(actual_sum, c);
+    // }
 }

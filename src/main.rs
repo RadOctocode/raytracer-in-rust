@@ -1,6 +1,6 @@
 mod Matrix;
 mod Tuple;
-mod color;
+//mod color;
 fn main() {
     println!("Hello, world!");
 }
