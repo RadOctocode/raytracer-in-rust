@@ -1,4 +1,4 @@
-pub mod Tuple;
+use crate::Tuple::Tuple;
 
 #[derive(Debug)]
 struct Matrix {
@@ -87,8 +87,8 @@ impl std::ops::Mul<Matrix> for Matrix {
 }
 
 impl std::ops::Mul<Tuple> for Matrix {
-    type Output = Tuple::Tuple;
-    fn mul(self, rhs: Tuple::Tuple) -> Tuple::Tuple {
+    type Output = Tuple;
+    fn mul(self, rhs: Tuple) -> Tuple {
         let mut output_tuple_vector = vec![0.0, 0.0, 0.0, 0.0];
         for y_index in 0..self.height {
             let matrix_row = self.get_row(y_index);

@@ -4,7 +4,7 @@ use std::ops::Index;
 
 #[derive(Debug)]
 pub struct Tuple {
-    vector: Vec<f64>, //x[0], y[1], z[2], w[3]
+   pub vector: Vec<f64>, //x[0], y[1], z[2], w[3]
 }
 
 impl PartialEq for Tuple {
