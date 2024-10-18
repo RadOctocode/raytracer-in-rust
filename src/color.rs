@@ -1,10 +1,11 @@
 #![allow(dead_code)]
 use float_cmp::approx_eq;
 #[derive(Debug)]
-struct Color {
-    red: f64,
-    green: f64,
-    blue: f64,
+#[derive(Clone)]
+pub struct Color {
+    pub red: f64,
+    pub green: f64,
+    pub blue: f64,
 }
 
 impl PartialEq for Color {
@@ -16,7 +17,7 @@ impl PartialEq for Color {
     }
 }
 
-fn color(_red: f64, _green: f64, _blue: f64) -> Color {
+pub fn color(_red: f64, _green: f64, _blue: f64) -> Color {
     return Color {
         red: _red,
         green: _green,

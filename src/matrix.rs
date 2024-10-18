@@ -120,6 +120,22 @@ impl Matrix {
     fn is_invertable(&self) -> bool {
         self.determinant() != 0.0
     }
+
+    fn invert(&self) -> Matrix{
+        if !self.is_invertable(){
+            panic!("this matrix is not invertable");
+        }
+        let current_determinant = self.determinant();
+        let mut return_matrix = Matrix::zero(self.width, self.height);
+        for y_index in 0..self.height{
+            for x_index in 0..self.width{
+                // notice the (x_index, y_index) instead of (y_index, x_index)
+                let current_cofactor = self.cofactor(x_index, y_index);
+                return_matrix.vector[y_index][x_index] = current_cofactor/current_determinant;
+            }
+        }
+        return return_matrix;
+    }
 }
 
 impl PartialEq for Matrix {
@@ -183,7 +199,6 @@ impl std::ops::Mul<Tuple> for Matrix {
 #[cfg(test)]
 mod tests {
     use super::*;
-
     #[test]
     fn test_4x4_matrix() {
         let inner_matrix = vec![
@@ -442,4 +457,46 @@ mod tests {
         assert_eq!(b.determinant(), 0.0);
         assert_eq!(b.is_invertable(), false);
     }
+
+    #[test]
+    fn test_is_invertable_4_x_4() {
+        let a_vec = vec![
+            vec![-5.0, 2.0, 6.0, -8.0],
+            vec![1.0, -5.0, 1.0, 8.0],
+            vec![7.0, 7.0, -6.0, -7.0],
+            vec![1.0, -3.0, 7.0, 4.0],
+        ];
+        let b_vec = vec![
+            vec![-4.0, 2.0, -2.0, -3.0],
+            vec![9.0, 6.0, 2.0, 6.0],
+            vec![0.0, -5.0, 1.0, -5.0],
+            vec![0.0, 0.0, 0.0, 0.0],
+        ];
+        let a = Matrix::set(&a_vec);
+        let b = Matrix::set(&b_vec);
+        assert_eq!(a.determinant(), 532.0);
+        assert_eq!(a.is_invertable(), true);
+
+        assert_eq!(b.determinant(), 0.0);
+        assert_eq!(b.is_invertable(), false);
+    }
+
+    // #[test]
+    // fn test_invert_4_x_4() {
+    //     let a_vec = vec![
+    //         vec![-5.0, 2.0, 6.0, -8.0],
+    //         vec![1.0, -5.0, 1.0, 8.0],
+    //         vec![7.0, 7.0, -6.0, -7.0],
+    //         vec![1.0, -3.0, 7.0, 4.0],
+    //     ];
+    //     let b_vec = vec![
+    //         vec![0.21805, 0.45113, 0.24060, -0.04511],
+    //         vec![-0.80827, -1.45677, -0.44361, 0.52068],
+    //         vec![-0.07895, -0.22368, -0.05263, 0.19737],
+    //         vec![-0.52256, -0.81391, -0.30075, 0.30639],
+    //     ];
+    //     let a = Matrix::set(&a_vec);
+    //     let b = Matrix::set(&b_vec);
+    //     assert_eq!(a.invert(), b);
+    // }
 }
