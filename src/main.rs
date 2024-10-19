@@ -2,6 +2,7 @@ mod color;
 mod matrix;
 mod tuple;
 mod canvas;
+mod transform;
 use crate::color::color;
 use crate::canvas::Canvas;
 fn main() {
