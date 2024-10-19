@@ -1,14 +1,15 @@
 use crate::tuple::Tuple;
+use float_cmp::approx_eq;
 
 #[derive(Debug)]
-struct Matrix {
+pub struct Matrix {
     width: usize,
     height: usize,
     vector: Vec<Vec<f64>>,
 }
 
 impl Matrix {
-    fn zero(_width: usize, _height: usize) -> Self {
+    pub fn zero(_width: usize, _height: usize) -> Self {
         let _vector = vec![vec![0.0; _width]; _height];
         Matrix {
             width: _width,
@@ -17,7 +18,7 @@ impl Matrix {
         }
     }
 
-    fn set(v: &Vec<Vec<f64>>) -> Self {
+    pub fn set(v: &Vec<Vec<f64>>) -> Self {
         Self {
             width: v[0].len(),
             height: v.len(),
@@ -25,7 +26,7 @@ impl Matrix {
         }
     }
 
-    fn identity(width: usize, height: usize) -> Self {
+    pub fn identity(width: usize, height: usize) -> Self {
         let mut vector = vec![vec![0.0; width]; height];
         for i in 0..height {
             for j in 0..width {
@@ -41,11 +42,11 @@ impl Matrix {
         }
     }
 
-    fn get(&self, y: usize, x: usize) -> f64 {
+    pub fn get(&self, y: usize, x: usize) -> f64 {
         self.vector[y][x]
     }
 
-    fn set_element(&mut self, y: usize, x: usize, value: f64) {
+    pub fn set_element(&mut self, y: usize, x: usize, value: f64) {
         self.vector[y][x] = value;
     }
 
@@ -61,7 +62,7 @@ impl Matrix {
         return return_value;
     }
 
-    fn transpose(&self) -> Matrix {
+    pub fn transpose(&self) -> Matrix {
         let mut vector = Vec::new();
         //make each row a coloum
         for i in 0..self.width {
@@ -75,7 +76,7 @@ impl Matrix {
         }
     }
 
-    fn determinant(&self) -> f64 {
+    pub fn determinant(&self) -> f64 {
         if self.width == 2 && self.height == 2 {
             return (self.vector[0][0] * self.vector[1][1])
                 - (self.vector[0][1] * self.vector[1][0]);
@@ -88,7 +89,7 @@ impl Matrix {
         return determinant;
     }
 
-    fn submatrix(&self, row: usize, col: usize) -> Matrix {
+    pub fn submatrix(&self, row: usize, col: usize) -> Matrix {
         let mut vector = Vec::new();
         for (row_index, row_element) in self.vector.iter().enumerate() {
             if row_index != row {
@@ -104,12 +105,12 @@ impl Matrix {
         return Matrix::set(&vector);
     }
 
-    fn minor(&self, row: usize, col: usize) -> f64 {
+    pub fn minor(&self, row: usize, col: usize) -> f64 {
         let current_sub_matrix = self.submatrix(row, col);
         return current_sub_matrix.determinant();
     }
 
-    fn cofactor(&self, row: usize, col: usize) -> f64 {
+    pub fn cofactor(&self, row: usize, col: usize) -> f64 {
         let mut current_minor = self.minor(row, col);
         if (row + col) % 2 == 1 {
             current_minor = current_minor * -1.0;
@@ -117,11 +118,11 @@ impl Matrix {
         return current_minor;
     }
 
-    fn is_invertable(&self) -> bool {
+    pub fn is_invertable(&self) -> bool {
         self.determinant() != 0.0
     }
 
-    fn invert(&self) -> Matrix{
+    pub fn invert(&self) -> Matrix{
         if !self.is_invertable(){
             panic!("this matrix is not invertable");
         }
@@ -146,7 +147,10 @@ impl PartialEq for Matrix {
 
         for (y_index, y_vect) in self.vector.iter().enumerate() {
             for (x_index, x_el) in y_vect.iter().enumerate() {
-                if other.get(y_index, x_index) != *x_el {
+                let lhs = other.get(y_index, x_index);
+                let rhs = *x_el;
+                let float_eq = approx_eq!(f64, lhs, rhs, epsilon = 0.001);
+                if !float_eq {
                     return false;
                 }
             }
@@ -481,22 +485,22 @@ mod tests {
         assert_eq!(b.is_invertable(), false);
     }
 
-    // #[test]
-    // fn test_invert_4_x_4() {
-    //     let a_vec = vec![
-    //         vec![-5.0, 2.0, 6.0, -8.0],
-    //         vec![1.0, -5.0, 1.0, 8.0],
-    //         vec![7.0, 7.0, -6.0, -7.0],
-    //         vec![1.0, -3.0, 7.0, 4.0],
-    //     ];
-    //     let b_vec = vec![
-    //         vec![0.21805, 0.45113, 0.24060, -0.04511],
-    //         vec![-0.80827, -1.45677, -0.44361, 0.52068],
-    //         vec![-0.07895, -0.22368, -0.05263, 0.19737],
-    //         vec![-0.52256, -0.81391, -0.30075, 0.30639],
-    //     ];
-    //     let a = Matrix::set(&a_vec);
-    //     let b = Matrix::set(&b_vec);
-    //     assert_eq!(a.invert(), b);
-    // }
+    #[test]
+    fn test_invert_4_x_4() {
+        let a_vec = vec![
+            vec![-5.0, 2.0, 6.0, -8.0],
+            vec![1.0, -5.0, 1.0, 8.0],
+            vec![7.0, 7.0, -6.0, -7.0],
+            vec![1.0, -3.0, 7.0, 4.0],
+        ];
+        let b_vec = vec![
+            vec![0.21805, 0.45113, 0.24060, -0.04511],
+            vec![-0.80827, -1.45677, -0.44361, 0.52068],
+            vec![-0.07895, -0.22368, -0.05263, 0.19737],
+            vec![-0.52256, -0.81391, -0.30075, 0.30639],
+        ];
+        let a = Matrix::set(&a_vec);
+        let b = Matrix::set(&b_vec);
+        assert_eq!(a.invert(), b);
+    }
 }
