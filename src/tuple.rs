@@ -91,14 +91,13 @@ impl std::ops::Div<f64> for Tuple {
     }
 }
 
- impl Clone for Tuple {
+impl Clone for Tuple {
     fn clone(&self) -> Tuple {
-        Tuple{
-            vector: self.vector.clone()
+        Tuple {
+            vector: self.vector.clone(),
         }
     }
 }
-
 
 impl Index<usize> for Tuple {
     type Output = f64;

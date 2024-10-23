@@ -122,17 +122,17 @@ impl Matrix {
         self.determinant() != 0.0
     }
 
-    pub fn invert(&self) -> Matrix{
-        if !self.is_invertable(){
+    pub fn invert(&self) -> Matrix {
+        if !self.is_invertable() {
             panic!("this matrix is not invertable");
         }
         let current_determinant = self.determinant();
         let mut return_matrix = Matrix::zero(self.width, self.height);
-        for y_index in 0..self.height{
-            for x_index in 0..self.width{
+        for y_index in 0..self.height {
+            for x_index in 0..self.width {
                 // notice the (x_index, y_index) instead of (y_index, x_index)
                 let current_cofactor = self.cofactor(x_index, y_index);
-                return_matrix.vector[y_index][x_index] = current_cofactor/current_determinant;
+                return_matrix.vector[y_index][x_index] = current_cofactor / current_determinant;
             }
         }
         return return_matrix;

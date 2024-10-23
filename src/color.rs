@@ -1,7 +1,6 @@
 #![allow(dead_code)]
 use float_cmp::approx_eq;
-#[derive(Debug)]
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct Color {
     pub red: f64,
     pub green: f64,
