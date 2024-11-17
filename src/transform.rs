@@ -1,7 +1,7 @@
 use crate::matrix::Matrix;
 use crate::tuple::Tuple;
 
-fn translation(x: f64, y: f64, z: f64) -> Matrix {
+pub fn translation(x: f64, y: f64, z: f64) -> Matrix {
     //return translation matrix
     let mut return_matrix = Matrix::identity(4, 4);
     return_matrix.set_element(0, 3, x);
@@ -10,7 +10,7 @@ fn translation(x: f64, y: f64, z: f64) -> Matrix {
     return return_matrix;
 }
 
-fn scaling(x: f64, y: f64, z: f64) -> Matrix {
+pub fn scaling(x: f64, y: f64, z: f64) -> Matrix {
     let mut return_matrix = Matrix::identity(4, 4);
     return_matrix.set_element(0, 0, x);
     return_matrix.set_element(1, 1, y);
@@ -30,9 +30,17 @@ fn scaling(x: f64, y: f64, z: f64) -> Matrix {
 
 // }
 
-// fn shearing()-> Matrix{
+fn shearing(xy: f64, xz: f64, yx: f64, yz: f64, zx: f64, zy: f64) -> Matrix {
+    let mut return_matrix = Matrix::identity(4, 4);
+    return_matrix.set_element(0, 1, xy);
+    return_matrix.set_element(0, 2, xz);
+    return_matrix.set_element(1, 0, yx);
+    return_matrix.set_element(1, 2, yz);
+    return_matrix.set_element(2, 0, zx);
+    return_matrix.set_element(2, 1, zy);
 
-// }
+    return return_matrix;
+}
 
 #[cfg(test)]
 mod tests {

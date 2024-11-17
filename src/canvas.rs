@@ -62,7 +62,7 @@ impl Canvas {
         return (255.00 * scale_value) as u8;
     }
 
-    pub fn canvas_to_ppm(&self, name: String) -> std::io::Result<()> {
+    pub fn canvas_to_ppm(&self, name: &str) -> std::io::Result<()> {
         let mut file = File::options()
             .append(true)
             .create_new(true)

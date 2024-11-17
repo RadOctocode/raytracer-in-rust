@@ -35,6 +35,7 @@ impl Ray {
     }
 }
 
+#[derive(Clone)]
 pub struct Sphere {
     origin: Tuple,
     radius: f64,
