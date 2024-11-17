@@ -77,7 +77,6 @@ impl Canvas {
         for element in &self.vector {
             for color in element {
                 let (red, blue, green) = Self::scale_color(color.clone());
-                println!("{} {} {}\n", red, blue, green);
                 writeln!(&mut file, "{} {} {}\n", red, blue, green);
             }
         }
