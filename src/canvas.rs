@@ -42,7 +42,15 @@ impl Canvas {
         self.vector[row][col].clone()
     }
 
-    fn scale_color(color: Color) -> (u8, u8, u8) {
+    pub fn print_canvas(&self){
+        for element in &self.vector {
+            for color in element {
+                println!("{} {} {}", color.red, color.blue, color.green);
+            }
+        }
+    }
+
+    fn scale_color(color: &Color) -> (u8, u8, u8) {
         (
             Self::scale_component(color.red),
             Self::scale_component(color.blue),
@@ -51,15 +59,14 @@ impl Canvas {
     }
 
     fn scale_component(component: f64) -> u8 {
-        let mut scale_value = component;
         if component > 1.00 {
-            scale_value = 1.00;
+            return (255.0) as u8;
         }
 
         if component < 0.00 {
-            scale_value = 0.00;
+            return (0.0) as u8;
         }
-        return (255.00 * scale_value) as u8;
+        return (255.00 * component) as u8;
     }
 
     pub fn canvas_to_ppm(&self, name: &str) -> std::io::Result<()> {
@@ -76,7 +83,7 @@ impl Canvas {
         );
         for element in &self.vector {
             for color in element {
-                let (red, blue, green) = Self::scale_color(color.clone());
+                let (red, blue, green) = Self::scale_color(color);
                 writeln!(&mut file, "{} {} {}\n", red, blue, green);
             }
         }

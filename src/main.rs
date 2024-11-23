@@ -23,13 +23,13 @@ fn main() {
     //as the sphere gets closer to 1.4 the sphere gets too large to render
     let test_sphere = Sphere::set_sphere(sphere_origin, 1.3);
     for y in 0..(canvas_size - 1) {
-        let world_y = (-1.0*(y as f64)) + (canvas_size as f64) / 2.0;
+        let world_y = (-1.0 * (y as f64)) + (canvas_size as f64) / 2.0;
         for x in 0..(canvas_size - 1) {
             let world_x = (x as f64) - (canvas_size as f64) / 2.0;
             let position = Tuple::set_point(world_x, world_y, wall);
             let new_vector = position - ray_origin.clone();
             let r = Ray::set_ray(ray_origin.clone(), new_vector.normalize());
-            let xs = Ray::sphere_intersect(r, test_sphere.clone());
+            let xs = Ray::sphere_intersect(&r, &test_sphere);
             if xs.len() > 0 {
                 canvas.write_pixel(x, y, color.clone());
             }
@@ -37,5 +37,6 @@ fn main() {
     }
 
     let name = "../examples/chapter5.ppm";
+    //canvas.print_canvas();
     canvas.canvas_to_ppm(name).expect("bad")
 }
