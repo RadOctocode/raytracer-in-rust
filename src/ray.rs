@@ -225,14 +225,14 @@ mod tests {
         assert_eq!(actual_value, expected_value);
     }
 
-    // #[test]
-    // fn test_sphere_normal_not_origin() {
-    //     let sphere_origin = Tuple::set_point(3.0_f64.sqrt()/3.0, 3.0_f64.sqrt()/3.0, 3.0_f64.sqrt()/3.0);
-    //     let test_sphere = Sphere::set_sphere(sphere_origin, 1.0);
+    #[test]
+    fn test_sphere_normal_not_origin() {
+        let sphere_origin = Tuple::set_point(0.0, 1.0, 0.0);
+        let test_sphere = Sphere::set_sphere(sphere_origin, 1.0);
 
-    //     let test_point = Tuple::set_point(3.0_f64.sqrt()/3.0, 3.0_f64.sqrt()/3.0, 3.0_f64.sqrt()/3.0);
-    //     let actual_value = test_sphere.normal_at(test_point);
-    //     let expected_value = actual_value.normalize();
-    //     assert_eq!(actual_value, expected_value);
-    // }
+        let test_point = Tuple::set_point(0.0, 1.70711, -0.70711);
+        let actual_value = test_sphere.normal_at(test_point);
+        let expected_value = Tuple::set_vector(0.0, 0.70711, -0.70711);
+        assert_eq!(actual_value, expected_value);
+    }
 }

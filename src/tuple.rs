@@ -9,10 +9,10 @@ pub struct Tuple {
 
 impl PartialEq for Tuple {
     fn eq(&self, other: &Self) -> bool {
-        let x_comp = approx_eq!(f64, self[0], other[0], ulps = 2);
-        let y_comp = approx_eq!(f64, self[1], other[1], ulps = 2);
-        let z_comp = approx_eq!(f64, self[2], other[2], ulps = 2);
-        let w_comp = approx_eq!(f64, self[3], other[3], ulps = 2);
+        let x_comp = approx_eq!(f64, self[0], other[0], epsilon = 0.0001);
+        let y_comp = approx_eq!(f64, self[1], other[1], epsilon = 0.0001);
+        let z_comp = approx_eq!(f64, self[2], other[2], epsilon = 0.0001);
+        let w_comp = approx_eq!(f64, self[3], other[3], epsilon = 0.0001);
 
         return x_comp && y_comp && z_comp && w_comp;
     }
