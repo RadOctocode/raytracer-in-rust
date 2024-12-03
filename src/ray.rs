@@ -1,8 +1,11 @@
+use crate::material::Material;
+use crate::matrix::Matrix;
 use crate::tuple::Tuple;
+
 #[derive(Debug)]
 pub struct Ray {
-    direction: Tuple,
-    origin: Tuple,
+    pub direction: Tuple,
+    pub origin: Tuple,
 }
 
 impl Ray {
@@ -34,11 +37,16 @@ impl Ray {
         vec![t1, t2]
     }
 }
+// should I leave this out here?
+pub fn reflect(a: Tuple, b: Tuple) -> Tuple {
+    a.clone() - b.clone() * 2.0 * Tuple::dot(a.clone(), b.clone())
+}
 
 #[derive(Clone)]
 pub struct Sphere {
     origin: Tuple,
     radius: f64,
+    pub material: Material,
 }
 
 impl Sphere {
@@ -46,6 +54,7 @@ impl Sphere {
         Sphere {
             origin: origin,
             radius: radius,
+            material: Material::default_material(),
         }
     }
     pub fn normal_at(&self, point: Tuple) -> Tuple {
@@ -234,5 +243,32 @@ mod tests {
         let actual_value = test_sphere.normal_at(test_point);
         let expected_value = Tuple::set_vector(0.0, 0.70711, -0.70711);
         assert_eq!(actual_value, expected_value);
+    }
+
+    #[test]
+    fn test_reflect_vector() {
+        let vector_a = Tuple::set_vector(1.0, -1.0, 0.0);
+        let vector_b = Tuple::set_vector(0.0, 1.0, 0.0);
+        let actual = reflect(vector_a, vector_b);
+        let expected = Tuple::set_vector(1.0, 1.0, 0.0);
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn test_reflect_vector_slanted_surface() {
+        let vector_a = Tuple::set_vector(0.0, -1.0, 0.0);
+        let vector_b = Tuple::set_vector(2.0_f64.sqrt() / 2.0, 2.0_f64.sqrt() / 2.0, 0.0);
+        let actual = reflect(vector_a, vector_b);
+        let expected = Tuple::set_vector(1.0, 0.0, 0.0);
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn test_change_sphere_material() {
+        let mut test_sphere = Sphere::set_sphere(Tuple::set_point(0.0, 0.0, 0.0), 1.0);
+        let mut new_material = Material::default_material();
+        new_material.ambient = 1.0;
+        test_sphere.material = new_material.clone();
+        assert_eq!(test_sphere.material, new_material);
     }
 }

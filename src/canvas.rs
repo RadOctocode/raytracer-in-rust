@@ -42,7 +42,7 @@ impl Canvas {
         self.vector[row][col].clone()
     }
 
-    pub fn print_canvas(&self){
+    pub fn print_canvas(&self) {
         for element in &self.vector {
             for color in element {
                 println!("{} {} {}", color.red, color.blue, color.green);
@@ -84,6 +84,7 @@ impl Canvas {
         for element in &self.vector {
             for color in element {
                 let (red, blue, green) = Self::scale_color(color);
+                println!("{} {} {}", red, blue, green);
                 writeln!(&mut file, "{} {} {}\n", red, blue, green);
             }
         }

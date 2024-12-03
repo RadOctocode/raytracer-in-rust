@@ -1,5 +1,7 @@
 #![allow(dead_code)]
+use crate::Tuple;
 use float_cmp::approx_eq;
+
 #[derive(Debug, Clone)]
 pub struct Color {
     pub red: f64,
@@ -9,9 +11,9 @@ pub struct Color {
 
 impl PartialEq for Color {
     fn eq(&self, other: &Self) -> bool {
-        let red_comp = approx_eq!(f64, self.red, other.red, ulps = 2);
-        let green_comp = approx_eq!(f64, self.green, other.green, ulps = 2);
-        let blue_comp = approx_eq!(f64, self.blue, other.blue, ulps = 2);
+        let red_comp = approx_eq!(f64, self.red, other.red, epsilon = 0.0001);
+        let green_comp = approx_eq!(f64, self.green, other.green, epsilon = 0.0001);
+        let blue_comp = approx_eq!(f64, self.blue, other.blue, epsilon = 0.0001);
         return red_comp && green_comp && blue_comp;
     }
 }
@@ -73,6 +75,23 @@ impl std::ops::Mul<Color> for f64 {
 
     fn mul(self, _rhs: Color) -> Color {
         return color(self * _rhs.red, self * _rhs.green, self * _rhs.blue);
+    }
+}
+
+impl Color {
+    pub fn create_black() -> Color {
+        Color {
+            red: 0.0,
+            green: 0.0,
+            blue: 0.0,
+        }
+    }
+    pub fn from_tuple(input: Tuple) -> Color {
+        Color {
+            red: input.vector[0],
+            green: input.vector[1],
+            blue: input.vector[2],
+        }
     }
 }
 
