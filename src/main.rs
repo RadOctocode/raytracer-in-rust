@@ -52,6 +52,5 @@ fn main() {
     }
 
     let name = "../examples/chapter6.ppm";
-    //canvas.print_canvas();
-    canvas.canvas_to_ppm(name).expect("bad")
+    canvas.canvas_to_ppm(name, false).expect("Could not write canvas to ppm")
 }
