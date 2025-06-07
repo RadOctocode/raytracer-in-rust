@@ -69,7 +69,7 @@ impl Canvas {
         return (255.00 * component) as u8;
     }
 
-    pub fn canvas_to_ppm(&self, name: &str) -> std::io::Result<()> {
+    pub fn canvas_to_ppm(&self, name: &str, debug: bool) -> std::io::Result<()> {
         let mut file = File::options()
             .append(true)
             .create_new(true)
@@ -84,7 +84,9 @@ impl Canvas {
         for element in &self.vector {
             for color in element {
                 let (red, blue, green) = Self::scale_color(color);
-                println!("{} {} {}", red, blue, green);
+                if debug {
+                    println!("{} {} {}", red, blue, green);
+                }
                 writeln!(&mut file, "{} {} {}\n", red, blue, green);
             }
         }
